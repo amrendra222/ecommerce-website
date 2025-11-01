@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - ShopEasy</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-brand">
+                    <h1>ShopEasy</h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="cart.html">Cart <span id="cart-count">0</span></a></li>
+                    <li><a href="checkout.html">Checkout</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="product-details-container">
+            <div class="container">
+                <a href="products.html" class="back-link">← Back to Products</a>
+                
+                <div id="product-details-content">
+                    <!-- Product details will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 ShopEasy. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../js/cart.js"></script>
+    <script src="../js/products.js"></script>
+    <script>
+        function displayProductDetails(productId) {
+            const product = products.find(p => p.id === parseInt(productId));
+            const content = document.getElementById('product-details-content');
+            
+            if (!product) {
+                content.innerHTML = '<div class="empty-cart"><h2>Product not found</h2><a href="products.html" class="btn-primary">Browse Products</a></div>';
+                return;
+            }
+            
+            const categoryName = categories.find(c => c.id === product.category)?.name || product.category;
+            
+            content.innerHTML = `
+                <div class="product-details">
+                    <div class="product-details-image">
+                        <div class="product-image-large">${product.emoji}</div>
+                    </div>
+                    <div class="product-details-info">
+                        <span class="product-category-badge">${categoryName}</span>
+                        <h1 class="product-details-name">${product.name}</h1>
+                        <div class="product-details-price">$${product.price.toFixed(2)}</div>
+                        <div class="product-description">
+                            <h3>Description</h3>
+                            <p>${product.description}</p>
+                        </div>
+                        <div class="product-details-actions">
+                            <button class="add-to-cart-large" onclick="addProductToCart(${product.id})">
+                                Add to Cart
+                            </button>
+                        </div>
+                        <div class="product-features">
+                            <h3>Features</h3>
+                            <ul>
+                                <li>High quality materials</li>
+                                <li>Fast shipping available</li>
+                                <li>30-day return policy</li>
+                                <li>Customer support included</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            cart.updateCartCount();
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id');
+            
+            if (productId) {
+                displayProductDetails(productId);
+            } else {
+                document.getElementById('product-details-content').innerHTML = 
+                    '<div class="empty-cart"><h2>No product selected</h2><a href="products.html" class="btn-primary">Browse Products</a></div>';
+            }
+        });
+    </script>
+</body>
+</html>
+
